@@ -207,10 +207,10 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
             overviewPanel.initiateSplitSelect(mThumbnailView.getTaskView());
         }
 
-        private void clearAllTasks() {
-            final RecentsView recentsView = mThumbnailView.getTaskView().getRecentsView();
-            recentsView.dismissAllTasks();
-        }
+	private void clearAllTasks() {
+	    final RecentsView recentsView = mThumbnailView.getTaskView().getRecentsView();
+	    recentsView.dismissAllTasks();
+	}
 
         /**
          * Called when the overlay is no longer used.

@@ -38,7 +38,8 @@ import com.android.launcher3.Utilities;
 import com.android.launcher3.util.DisplayController;
 import com.android.launcher3.util.MultiPropertyFactory.MultiProperty;
 import com.android.launcher3.util.MultiValueAlpha;
-import com.android.launcher3.util.NavigationMode;
+import com.android.launcher3.util.NavigationMode;;
+import com.android.launcher3.util.ShakeUtils;
 import com.android.quickstep.TaskOverlayFactory.OverlayUICallbacks;
 import com.android.quickstep.util.LayoutUtils;
 
@@ -49,7 +50,7 @@ import java.lang.annotation.RetentionPolicy;
  * View for showing action buttons in Overview
  */
 public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayout
-        implements OnClickListener, Insettable, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements OnClickListener, Insettable, SharedPreferences.OnSharedPreferenceChangeListener, ShakeUtils.OnShakeListener {
 
     private final Rect mInsets = new Rect();
 
@@ -100,6 +101,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
 
     private MultiValueAlpha mMultiValueAlpha;
     private Button mSplitButton;
+    private ShakeUtils mShakeUtils;
 
     @ActionsHiddenFlags
     private int mHiddenFlags;
@@ -126,10 +128,12 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
 
     public OverviewActionsView(Context context) {
         this(context, null);
+	mShakeUtils = new ShakeUtils(context);
     }
 
     public OverviewActionsView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
+	mShakeUtils = new ShakeUtils(context);
     }
 
     public OverviewActionsView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -139,6 +143,25 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
         mClearAll = prefs.getBoolean(KEY_RECENTS_CLEAR_ALL, true);
         mLens = prefs.getBoolean(KEY_RECENTS_LENS, false);
         prefs.registerOnSharedPreferenceChangeListener(this);
+	mShakeUtils = new ShakeUtils(context);
+    }
+
+    private void bindShake() {
+	mShakeUtils.bindShakeListener(this);
+    }
+
+    private void unBindShake() {
+	mShakeUtils.unBindShakeListener(this);
+    }
+
+    @Override
+    public void onVisibilityAggregated(boolean isVisible) {
+	if (isVisible) {
+	    bindShake();
+	} else {
+	    unBindShake();
+	}
+	super.onVisibilityAggregated(isVisible);
     }
 
     @Override
@@ -167,6 +190,11 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
 
         mSplitButton = findViewById(R.id.action_split);
         mSplitButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onShake(double speed) {
+	mCallbacks.onClearAllTasksRequested();
     }
 
     /**
