@@ -194,7 +194,10 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
 
     @Override
     public void onShake(double speed) {
-	mCallbacks.onClearAllTasksRequested();
+	if (mCallbacks != null) {
+	    mCallbacks.onClearAllTasksRequested();
+	    setCallbacks(null); // Clear the listener after shake
+	}
     }
 
     /**
