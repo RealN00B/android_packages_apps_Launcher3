@@ -71,12 +71,6 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        if (!Utilities.isThemedIconsEnabled(getContext())) {
-          getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google);
-        } else {
-          getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google_themed);
-        }
-
         if (Utilities.showSearchBar(getContext())) {
             getSearchView().setVisibility(View.VISIBLE);
         } else {
@@ -258,11 +252,6 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
     @Override
     protected void updateHeaderScroll(int scrolledOffset) {
         super.updateHeaderScroll(scrolledOffset);
-        if (!Utilities.isThemedIconsEnabled(getContext())) {
-          getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google);
-        } else {
-          getSearchView().setBackgroundResource(R.drawable.bg_all_apps_searchbox_google_themed);
-        }
         if (mSearchUiManager.getEditText() == null) {
             return;
         }
