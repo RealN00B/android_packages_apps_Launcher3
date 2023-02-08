@@ -159,6 +159,7 @@ public final class Utilities {
     public static final String KEY_APP_DRAWER_OPACITY = "pref_app_drawer_opacity";
     public static final String KEY_DRAWER_SEARCHBAR = "pref_drawer_searchbar";
     public static final String KEY_RECENTS_MEMINFO = "pref_recents_meminfo";
+    public static final String KEY_HOTSEAT_OPACITY = "pref_hotseat_opacity";
 
     /**
      * Returns true if theme is dark.
@@ -531,6 +532,12 @@ public final class Utilities {
                 0, 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         return spanned;
     }
+    
+    public static SharedPreferences getPrefs(Context context) {
+        // Use application context for shared preferences, so that we use a single cached instance
+        return context.getApplicationContext().getSharedPreferences(
+                LauncherFiles.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE);
+    }
 
     public static boolean isWallpaperSupported(Context context) {
         return context.getSystemService(WallpaperManager.class).isWallpaperSupported();
@@ -856,4 +863,8 @@ public final class Utilities {
         return prefs.getBoolean(KEY_SMARTSPACE, true);
     }
 
+    public static int getHotseatOpacity(Context context) {
+        SharedPreferences prefs = getPrefs(context.getApplicationContext());
+        return prefs.getInt(KEY_HOTSEAT_OPACITY, 40);
+    }
 }
