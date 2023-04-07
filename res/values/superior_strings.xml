@@ -179,4 +179,7 @@
     <string name="icon_pack_default_label">Default</string>
     <string name="icon_pack_add">Install more</string>
     <string name="icon_pack_no_market">There\'s no available app store</string>
+
+    <!-- Shake Clear Recents -->
+    <string name="recents_shake_clear_all_title">Shake phone to clear all tasks</string>
 </resources>

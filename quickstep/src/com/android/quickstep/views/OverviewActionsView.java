@@ -100,6 +100,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
     private static final String KEY_RECENTS_SCREENSHOT = "pref_recents_screenshot";
     private static final String KEY_RECENTS_CLEAR_ALL = "pref_recents_clear_all";
     private static final String KEY_RECENTS_LENS = "pref_recents_lens";
+    private static final String KEY_RECENTS_SHAKE_CLEAR_ALL = "pref_recents_shake_clear_all";
 
     private Context mContext;
     private MultiValueAlpha mMultiValueAlpha;
@@ -128,6 +129,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
     private boolean mScreenshot;
     private boolean mClearAll;
     private boolean mLens;
+    private boolean mShakeClearAll;
 
     public OverviewActionsView(Context context) {
         this(context, null);
@@ -144,25 +146,18 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
         mClearAll = prefs.getBoolean(KEY_RECENTS_CLEAR_ALL, true);
         mLens = prefs.getBoolean(KEY_RECENTS_LENS, false);
         prefs.registerOnSharedPreferenceChangeListener(this);
-        mContext = context;
-    }
-
-    private void bindShake() {
-	mShakeUtils.bindShakeListener(this);
-    }
-
-    private void unBindShake() {
-	mShakeUtils.unBindShakeListener(this);
+        mShakeUtils = new ShakeUtils(context);
+        mShakeClearAll = prefs.getBoolean(KEY_RECENTS_SHAKE_CLEAR_ALL, true);
     }
 
     @Override
     public void onVisibilityAggregated(boolean isVisible) {
         super.onVisibilityAggregated(isVisible);
         if (isVisible) {
-	        bindShake();
-	    } else {
-	        unBindShake();
-	    }
+            mShakeUtils.bindShakeListener(this);
+        } else {
+            mShakeUtils.unBindShakeListener(this);
+        }
     }
 
     @Override
@@ -170,7 +165,6 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
         super.onFinishInflate();
         mMultiValueAlpha = new MultiValueAlpha(findViewById(R.id.action_buttons), NUM_ALPHAS);
         mMultiValueAlpha.setUpdateVisibility(true);
-        mShakeUtils = new ShakeUtils(mContext);
         updateVisibilities();
     }
 
@@ -196,10 +190,9 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
 
     @Override
     public void onShake(double speed) {
-	    if (mCallbacks != null && findViewById(R.id.action_screenshot).getVisibility() == VISIBLE) {
-	        mCallbacks.onClearAllTasksRequested();
-	        setCallbacks(null); // Clear the listener after shake
-	    }
+        if (mCallbacks != null && mShakeClearAll) {
+            mCallbacks.onClearAllTasksRequested();
+        }
     }
 
     /**
@@ -250,6 +243,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
             mClearAll = prefs.getBoolean(KEY_RECENTS_CLEAR_ALL, true);
         } else if (key.equals(KEY_RECENTS_LENS)) {
             mLens = prefs.getBoolean(KEY_RECENTS_LENS, false);
+        } else if (key.equals(KEY_RECENTS_SHAKE_CLEAR_ALL)) {
+            mShakeClearAll = prefs.getBoolean(KEY_RECENTS_SHAKE_CLEAR_ALL, true);
         }
         updateVisibilities();
     }
