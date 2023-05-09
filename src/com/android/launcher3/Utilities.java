@@ -165,6 +165,7 @@ public final class Utilities {
     public static final String KEY_DRAWER_SEARCHBAR = "pref_drawer_searchbar";
     public static final String KEY_RECENTS_MEMINFO = "pref_recents_meminfo";
     public static final String KEY_HOTSEAT_OPACITY = "pref_hotseat_opacity";
+    public static final String KEY_LENS = "pref_recents_lens";
 
     /**
      * Returns true if theme is dark.
