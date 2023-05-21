@@ -82,10 +82,10 @@ public class LauncherIconProvider extends IconProvider {
         Resources res = mContext.getResources();
         boolean themedIconPackAvailable = false;
         if (themedIconPack != null) {
-             try {
+            try {
                 res = mContext.getPackageManager().getResourcesForApplication(themedIconPack);
                 themedIconPackAvailable = true;
-             } catch(Exception e) {}
+            } catch(Exception e) {}
         }
         int resID = res.getIdentifier("grayscale_icon_map", "xml",
                 themedIconPackAvailable ? themedIconPack : mContext.getPackageName());
